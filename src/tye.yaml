@@ -1,0 +1,22 @@
+# tye application configuration file
+# read all about it at https://github.com/dotnet/tye
+#
+# when you've given us a try, we'd love to know what you think:
+#    https://aka.ms/AA7q20u
+#
+name: brewstore
+services:
+- name: brewstore-api
+  project: BrewStore.Api/BrewStore.Api.csproj
+- name: brewstore-api-db
+  image: postgres:13.4
+  env:
+    - name: POSTGRES_PASSWORD
+      value: "4authpass@word"
+  bindings:
+    - port: 54321
+      containerPort: 5432
+      connectionString: Server=${host};Port=${port};User Id=postgres;Password=${env:POSTGRES_PASSWORD};
+
+- name: brewstore-web
+  project: BrewStore.Web/BrewStore.Web.csproj
