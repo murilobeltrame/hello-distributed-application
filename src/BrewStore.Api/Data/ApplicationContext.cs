@@ -1,4 +1,4 @@
-using BrewStore.Models;
+using BrewStore.Api.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BrewStore.Api.Data

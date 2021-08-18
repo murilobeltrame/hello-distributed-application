@@ -1,6 +1,6 @@
 using System;
 
-namespace BrewStore.Models
+namespace BrewStore.Api.Models
 {
     public class Brand
     {
