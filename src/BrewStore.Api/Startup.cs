@@ -34,9 +34,11 @@ namespace BrewStore.Api
         {
             if (env.IsDevelopment())
             {
+                app.UseMigrationsEndPoint();
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => {
+                app.UseSwaggerUI(c =>
+                {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "BrewStore.Api v1");
                     c.RoutePrefix = string.Empty;
                 });
