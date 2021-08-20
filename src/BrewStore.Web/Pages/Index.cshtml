@@ -7,9 +7,12 @@
 <div class="text-center">
     <h1 class="display-4">Beverages</h1>
     <table class="table">
+        <caption>Beverages table</caption>
         <thead>
-            <th>Brand</th>
-            <th>Kind</th>
+            <tr>
+                <th scope="col">Brand</th>
+                <th scope="col">Kind</th>
+            </tr>
         </thead>
         <tbody>
             @foreach (var beverage in @Model.Beverages.OrderBy(o => o.Brand.Name).ThenBy(o => o.Name))

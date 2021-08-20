@@ -19,7 +19,7 @@ namespace BrewStore.Web.Pages
 
         public IEnumerable<Beverage> Beverages { get; private set; }
 
-        public async Task OnGet([FromServices]BeverageClient client)
+        public async Task OnGet([FromServices] BeverageClient client)
         {
             Beverages = await client.GetBeverages();
         }
