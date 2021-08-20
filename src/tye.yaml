@@ -34,5 +34,5 @@ services:
     containerPort: 6379
     connectionString: "${host}:${port}"
 
-# - name: brewstore-web
-#   project: BrewStore.Web/BrewStore.Web.csproj
+- name: brewstore-web
+  project: BrewStore.Web/BrewStore.Web.csproj

@@ -1,0 +1,24 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Beverages</h1>
+    <table class="table">
+        <thead>
+            <th>Brand</th>
+            <th>Kind</th>
+        </thead>
+        <tbody>
+            @foreach (var beverage in @Model.Beverages.OrderBy(o => o.Brand.Name).ThenBy(o => o.Name))
+            {
+                <tr>
+                    <td>@beverage.Brand?.Name @beverage.Name.Replace(beverage.Brand?.Name, string.Empty)</td>
+                    <td>@beverage.Kind?.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

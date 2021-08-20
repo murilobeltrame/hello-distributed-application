@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrewStore.Api", "BrewStore.Api\BrewStore.Api.csproj", "{25CDA98D-7B2A-4BB6-8C8D-7353A9A3909C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrewStore.Api", "BrewStore.Api\BrewStore.Api.csproj", "{25CDA98D-7B2A-4BB6-8C8D-7353A9A3909C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrewStore.Web", "BrewStore.Web\BrewStore.Web.csproj", "{5B20B47E-9080-49DC-B41E-C7645AC02FCC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,9 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{25CDA98D-7B2A-4BB6-8C8D-7353A9A3909C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -30,5 +29,23 @@ Global
 		{25CDA98D-7B2A-4BB6-8C8D-7353A9A3909C}.Release|x64.Build.0 = Release|Any CPU
 		{25CDA98D-7B2A-4BB6-8C8D-7353A9A3909C}.Release|x86.ActiveCfg = Release|Any CPU
 		{25CDA98D-7B2A-4BB6-8C8D-7353A9A3909C}.Release|x86.Build.0 = Release|Any CPU
+		{5B20B47E-9080-49DC-B41E-C7645AC02FCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B20B47E-9080-49DC-B41E-C7645AC02FCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B20B47E-9080-49DC-B41E-C7645AC02FCC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5B20B47E-9080-49DC-B41E-C7645AC02FCC}.Debug|x64.Build.0 = Debug|Any CPU
+		{5B20B47E-9080-49DC-B41E-C7645AC02FCC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5B20B47E-9080-49DC-B41E-C7645AC02FCC}.Debug|x86.Build.0 = Debug|Any CPU
+		{5B20B47E-9080-49DC-B41E-C7645AC02FCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B20B47E-9080-49DC-B41E-C7645AC02FCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B20B47E-9080-49DC-B41E-C7645AC02FCC}.Release|x64.ActiveCfg = Release|Any CPU
+		{5B20B47E-9080-49DC-B41E-C7645AC02FCC}.Release|x64.Build.0 = Release|Any CPU
+		{5B20B47E-9080-49DC-B41E-C7645AC02FCC}.Release|x86.ActiveCfg = Release|Any CPU
+		{5B20B47E-9080-49DC-B41E-C7645AC02FCC}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F4C40FCB-570D-4B50-A344-659F27F579D3}
 	EndGlobalSection
 EndGlobal

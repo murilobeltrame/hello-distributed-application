@@ -31,7 +31,10 @@ namespace BrewStore.Api.Controllers
             var cachedData = await cache.GetStringAsync(cacheKey);
             if (string.IsNullOrWhiteSpace(cachedData))
             {
-                result = await _context.Beverages.ToListAsync();
+                result = await _context.Beverages
+                    .Include(i => i.Brand)
+                    .Include(i => i.Kind)
+                    .ToListAsync();
                 await cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(result), new DistributedCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(10)
@@ -54,7 +57,11 @@ namespace BrewStore.Api.Controllers
             var cachedData = await cache.GetStringAsync(cacheKey);
             if (string.IsNullOrWhiteSpace(cachedData))
             {
-                result = await _context.Beverages.FindAsync(id);
+                result = await _context.Beverages
+                    .Include(i => i.Brand)
+                    .Include(i => i.Kind)
+                    .Where(w => w.Id == id)
+                    .FirstOrDefaultAsync();
                 if (result == null)
                 {
                     return NotFound();
