@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BrewStore.Api.Data;
 using BrewStore.Api.Models;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
 
 namespace BrewStore.Api.Controllers
 {
@@ -14,6 +16,7 @@ namespace BrewStore.Api.Controllers
     public class BeveragesController : ControllerBase
     {
         private readonly ApplicationContext _context;
+        const string cacheKey = "beverages";
 
         public BeveragesController(ApplicationContext context)
         {
@@ -22,29 +25,56 @@ namespace BrewStore.Api.Controllers
 
         // GET: api/Beverages
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Beverage>>> GetBeverages()
+        public async Task<ActionResult<IEnumerable<Beverage>>> GetBeverages([FromServices] IDistributedCache cache)
         {
-            return await _context.Beverages.ToListAsync();
+            IEnumerable<Beverage> result;
+            var cachedData = await cache.GetStringAsync(cacheKey);
+            if (string.IsNullOrWhiteSpace(cachedData))
+            {
+                result = await _context.Beverages.ToListAsync();
+                await cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(result), new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(10)
+                });
+            }
+            else
+            {
+                result = JsonSerializer.Deserialize<IEnumerable<Beverage>>(cachedData);
+            }
+            return Ok(result);
         }
 
         // GET: api/Beverages/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Beverage>> GetBeverage(Guid id)
+        public async Task<ActionResult<Beverage>> GetBeverage([FromServices] IDistributedCache cache, Guid id)
         {
-            var beverage = await _context.Beverages.FindAsync(id);
+            var cachedKeyWithId = getCacheKeyWithId(id);
+            Beverage result;
 
-            if (beverage == null)
+            var cachedData = await cache.GetStringAsync(cacheKey);
+            if (string.IsNullOrWhiteSpace(cachedData))
             {
-                return NotFound();
+                result = await _context.Beverages.FindAsync(id);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                await cache.SetStringAsync(cachedKeyWithId, JsonSerializer.Serialize(result), new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(10)
+                });
             }
-
-            return beverage;
+            else
+            {
+                result = JsonSerializer.Deserialize<Beverage>(cachedData);
+            }
+            return Ok(result);
         }
 
         // PUT: api/Beverages/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBeverage(Guid id, Beverage beverage)
+        public async Task<IActionResult> PutBeverage([FromServices] IDistributedCache cache, Guid id, Beverage beverage)
         {
             if (id != beverage.Id)
             {
@@ -69,23 +99,28 @@ namespace BrewStore.Api.Controllers
                 }
             }
 
+            await cache.RemoveAsync(cacheKey);
+            await cache.RemoveAsync(getCacheKeyWithId(id));
+
             return NoContent();
         }
 
         // POST: api/Beverages
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Beverage>> PostBeverage(Beverage beverage)
+        public async Task<ActionResult<Beverage>> PostBeverage([FromServices] IDistributedCache cache, Beverage beverage)
         {
             _context.Beverages.Add(beverage);
             await _context.SaveChangesAsync();
+
+            await cache.RemoveAsync(cacheKey);
 
             return CreatedAtAction("GetBeverage", new { id = beverage.Id }, beverage);
         }
 
         // DELETE: api/Beverages/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBeverage(Guid id)
+        public async Task<IActionResult> DeleteBeverage([FromServices] IDistributedCache cache, Guid id)
         {
             var beverage = await _context.Beverages.FindAsync(id);
             if (beverage == null)
@@ -96,6 +131,9 @@ namespace BrewStore.Api.Controllers
             _context.Beverages.Remove(beverage);
             await _context.SaveChangesAsync();
 
+            await cache.RemoveAsync(cacheKey);
+            await cache.RemoveAsync(getCacheKeyWithId(id));
+
             return NoContent();
         }
 
@@ -103,5 +141,7 @@ namespace BrewStore.Api.Controllers
         {
             return _context.Beverages.Any(e => e.Id == id);
         }
+
+        private string getCacheKeyWithId(Guid id) => $"{cacheKey}_{id}";
     }
 }

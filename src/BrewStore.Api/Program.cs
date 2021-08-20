@@ -14,11 +14,11 @@ namespace BrewStore.Api
         {
             Activity.DefaultIdFormat = ActivityIdFormat.W3C;
             var host = CreateHostBuilder(args).Build();
-            CreateDbIfNotExistis(host);
+            CreateDbIfNotExists(host);
             host.Run();
         }
 
-        private static void CreateDbIfNotExistis(IHost host)
+        private static void CreateDbIfNotExists(IHost host)
         {
             using (var scope = host.Services.CreateScope())
             {

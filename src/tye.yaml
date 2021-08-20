@@ -6,6 +6,10 @@
 #
 name: brewstore
 
+namespace: brewstore
+
+registry: murilobeltrame
+
 extensions:
 - name: zipkin
 - name: seq
@@ -23,6 +27,12 @@ services:
     - port: 54321
       containerPort: 5432
       connectionString: Server=${host};Port=${port};User Id=postgres;Password=${env:POSTGRES_PASSWORD};
+- name: brewstore-api-cache
+  image: redis
+  bindings:
+  - port: 63791
+    containerPort: 6379
+    connectionString: "${host}:${port}"
 
 # - name: brewstore-web
 #   project: BrewStore.Web/BrewStore.Web.csproj

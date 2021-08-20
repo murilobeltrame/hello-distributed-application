@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BrewStore.Api.Data;
 using BrewStore.Api.Models;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
 
 namespace BrewStore.Api.Controllers
 {
@@ -14,6 +16,7 @@ namespace BrewStore.Api.Controllers
     public class BrandsController : ControllerBase
     {
         private readonly ApplicationContext _context;
+        const string cacheKey = "brands";
 
         public BrandsController(ApplicationContext context)
         {
@@ -22,29 +25,57 @@ namespace BrewStore.Api.Controllers
 
         // GET: api/Brands
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Brand>>> GetBrands()
+        public async Task<ActionResult<IEnumerable<Brand>>> GetBrands([FromServices] IDistributedCache cache)
         {
-            return await _context.Brands.ToListAsync();
+            IEnumerable<Brand> result;
+            var cachedData = await cache.GetStringAsync(cacheKey);
+            if (string.IsNullOrWhiteSpace(cachedData))
+            {
+                result = await _context.Brands.ToListAsync();
+                await cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(result), new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(10)
+                });
+            }
+            else
+            {
+                result = JsonSerializer.Deserialize<IEnumerable<Brand>>(cachedData);
+            }
+            return Ok(result);
         }
 
         // GET: api/Brands/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Brand>> GetBrand(Guid id)
+        public async Task<ActionResult<Brand>> GetBrand([FromServices] IDistributedCache cache, Guid id)
         {
-            var brand = await _context.Brands.FindAsync(id);
+            var cachedKeyWithId = getCacheKeyWithId(id);
+            Brand result;
 
-            if (brand == null)
+            var cachedData = await cache.GetStringAsync(cacheKey);
+            if (string.IsNullOrWhiteSpace(cachedData))
             {
-                return NotFound();
-            }
+                result = await _context.Brands.FindAsync(id);
 
-            return brand;
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                await cache.SetStringAsync(cachedKeyWithId, JsonSerializer.Serialize(result), new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(10)
+                });
+            }
+            else
+            {
+                result = JsonSerializer.Deserialize<Brand>(cachedData);
+            }
+            return Ok(result);
         }
 
         // PUT: api/Brands/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBrand(Guid id, Brand brand)
+        public async Task<IActionResult> PutBrand([FromServices] IDistributedCache cache, Guid id, Brand brand)
         {
             if (id != brand.Id)
             {
@@ -69,23 +100,28 @@ namespace BrewStore.Api.Controllers
                 }
             }
 
+            await cache.RemoveAsync(cacheKey);
+            await cache.RemoveAsync(getCacheKeyWithId(id));
+
             return NoContent();
         }
 
         // POST: api/Brands
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Brand>> PostBrand(Brand brand)
+        public async Task<ActionResult<Brand>> PostBrand([FromServices] IDistributedCache cache, Brand brand)
         {
             _context.Brands.Add(brand);
             await _context.SaveChangesAsync();
+
+            await cache.RemoveAsync(cacheKey);
 
             return CreatedAtAction("GetBrand", new { id = brand.Id }, brand);
         }
 
         // DELETE: api/Brands/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBrand(Guid id)
+        public async Task<IActionResult> DeleteBrand([FromServices] IDistributedCache cache, Guid id)
         {
             var brand = await _context.Brands.FindAsync(id);
             if (brand == null)
@@ -96,6 +132,9 @@ namespace BrewStore.Api.Controllers
             _context.Brands.Remove(brand);
             await _context.SaveChangesAsync();
 
+            await cache.RemoveAsync(cacheKey);
+            await cache.RemoveAsync(getCacheKeyWithId(id));
+
             return NoContent();
         }
 
@@ -103,5 +142,7 @@ namespace BrewStore.Api.Controllers
         {
             return _context.Brands.Any(e => e.Id == id);
         }
+
+        private string getCacheKeyWithId(Guid id) => $"{cacheKey}_{id}";
     }
 }

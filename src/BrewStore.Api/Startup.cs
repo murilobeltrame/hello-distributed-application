@@ -22,6 +22,7 @@ namespace BrewStore.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(Configuration.GetConnectionString("brewstore-api-db")));
+            services.AddStackExchangeRedisCache(options => options.Configuration = Configuration.GetConnectionString("brewstore-api-cache"));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -44,7 +45,7 @@ namespace BrewStore.Api
                 });
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 
