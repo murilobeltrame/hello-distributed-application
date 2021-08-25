@@ -1,4 +1,4 @@
-using BrewStore.Web.Services;
+using BrewStore.Shared.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

@@ -36,3 +36,9 @@ services:
 
 - name: brewstore-web
   project: BrewStore.Web/BrewStore.Web.csproj
+
+- name: brewstore-blazorserver
+  project: BrewStore.BlazorServer/BrewStore.BlazorServer.csproj
+
+- name: brewstore-blazorwasm
+  project: BrewStore.BlazorWasm/Server/BrewStore.BlazorWasm.Server.csproj

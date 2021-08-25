@@ -1,10 +1,10 @@
-﻿using BrewStore.Web.Models;
+using BrewStore.Shared.Services.Models;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace BrewStore.Web.Services
+namespace BrewStore.Shared.Services
 {
     public class BeverageClient
     {

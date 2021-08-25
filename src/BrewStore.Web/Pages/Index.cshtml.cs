@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BrewStore.Web.Models;
-using BrewStore.Web.Services;
+using BrewStore.Shared.Services;
+using BrewStore.Shared.Services.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;

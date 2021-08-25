@@ -1,0 +1,39 @@
+﻿@page "/"
+
+@using BrewStore.Shared.Services
+@using BrewStore.Shared.Services.Models
+@inject BeverageClient BeverageClient
+
+<h1 class="display-4">Beverages</h1>
+
+@if (beverages == null)
+{
+<p>Loading ...</p>
+} else {
+
+<table class="table">
+    <caption>Beverages table</caption>
+    <thead>
+        <tr>
+            <th scope="col">Brand</th>
+            <th scope="col">Kind</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var beverage in beverages.OrderBy(o => o.Brand.Name).ThenBy(o => o.Name))
+        {
+<tr>
+    <td>@beverage.Brand?.Name @beverage.Name.Replace(beverage.Brand?.Name, string.Empty)</td>
+    <td>@beverage.Kind?.Name</td>
+</tr>}
+    </tbody>
+</table>
+}
+
+@code { private IEnumerable<Beverage> beverages;
+
+    protected override async Task OnInitializedAsync()
+    {
+        beverages = await BeverageClient.GetBeverages();
+    }
+}

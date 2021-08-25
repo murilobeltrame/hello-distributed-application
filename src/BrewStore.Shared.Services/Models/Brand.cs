@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BrewStore.Web.Models
+namespace BrewStore.Shared.Services.Models
 {
     public class Brand
     {
