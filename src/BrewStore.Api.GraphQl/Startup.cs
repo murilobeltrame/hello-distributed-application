@@ -1,13 +1,18 @@
-using BrewStore.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
-namespace BrewStore.Api
+namespace BrewStore.Api.GraphQl
 {
     public class Startup
     {
@@ -21,12 +26,11 @@ namespace BrewStore.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(Configuration.GetConnectionString("brewstore-api-db")));
-            services.AddStackExchangeRedisCache(options => options.Configuration = Configuration.GetConnectionString("brewstore-api-cache"));
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "BrewStore.Api", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "BrewStore.Api.GraphQl", Version = "v1" });
             });
         }
 
@@ -37,14 +41,10 @@ namespace BrewStore.Api
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "BrewStore.Api v1");
-                    c.RoutePrefix = string.Empty;
-                });
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BrewStore.Api.GraphQl v1"));
             }
 
-            // app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 

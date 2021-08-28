@@ -1,16 +1,14 @@
-using System.Diagnostics;
+using BrewStore.Data.MigrationApi.Utils.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace BrewStore.Api
+namespace BrewStore.Data.MigrationApi
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            Activity.DefaultIdFormat = ActivityIdFormat.W3C;
-            var host = CreateHostBuilder(args).Build();
-            host.Run();
+            CreateHostBuilder(args).Build().SeedData().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

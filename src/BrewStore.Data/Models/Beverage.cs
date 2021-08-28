@@ -1,6 +1,6 @@
 using System;
 
-namespace BrewStore.Api.Models
+namespace BrewStore.Data.Models
 {
     public class Beverage
     {

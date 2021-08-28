@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace BrewStore.Api.Migrations
+namespace BrewStore.Data.MigrationApi.Migrations
 {
     public partial class Initial : Migration
     {

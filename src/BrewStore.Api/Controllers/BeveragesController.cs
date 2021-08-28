@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BrewStore.Api.Data;
-using BrewStore.Api.Models;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
+using BrewStore.Data;
+using BrewStore.Data.Models;
 
 namespace BrewStore.Api.Controllers
 {

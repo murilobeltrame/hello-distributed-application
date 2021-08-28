@@ -1,8 +1,8 @@
 using System;
 
-namespace BrewStore.Api.Models
+namespace BrewStore.Data.Models
 {
-    public class Kind
+    public class Brand
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

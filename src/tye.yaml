@@ -40,6 +40,20 @@ ingress:
 services:
 - name: brewstore-api
   project: BrewStore.Api/BrewStore.Api.csproj
+- name: brewstore-api-graphql
+  project: BrewStore.Api.GraphQl/BrewStore.Api.GraphQl.csproj
+- name: brewstore-api-grpc
+  project: BrewStore.Api.Grpc/BrewStore.Api.Grpc.csproj
+  bindings:
+    - port: 50050
+      name: http1
+      protocol: http
+    - port: 50051
+      name: http2
+      protocol: http
+
+- name: brewstore-data-migration-api
+  project: BrewStore.Data.MigrationApi/BrewStore.Data.MigrationApi.csproj
 - name: brewstore-api-db
   image: postgres:13.4
   env:

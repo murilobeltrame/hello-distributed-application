@@ -1,4 +1,3 @@
-using BrewStore.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
-namespace BrewStore.Api
+namespace BrewStore.Data.MigrationApi
 {
     public class Startup
     {
@@ -21,12 +20,17 @@ namespace BrewStore.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(Configuration.GetConnectionString("brewstore-api-db")));
-            services.AddStackExchangeRedisCache(options => options.Configuration = Configuration.GetConnectionString("brewstore-api-cache"));
-            services.AddControllers();
+            services.AddDbContext<ApplicationContext>(options =>
+            {
+                options.UseNpgsql(Configuration.GetConnectionString("brewstore-api-db"), o =>
+                {
+                    o.MigrationsAssembly("BrewStore.Data.MigrationApi");
+                });
+            });
+            services.AddControllers(); 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "BrewStore.Api", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "BrewStore.Data.MigrationApi", Version = "v1" });
             });
         }
 
@@ -39,12 +43,12 @@ namespace BrewStore.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "BrewStore.Api v1");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "BrewStore.Data.MigrationApi v1");
                     c.RoutePrefix = string.Empty;
                 });
             }
 
-            // app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 
