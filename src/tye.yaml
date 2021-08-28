@@ -15,6 +15,28 @@ extensions:
 - name: seq
   logPath: ./.logs
 
+ingress:
+- name: ingress
+  bindings:
+    - port: 8080
+  rules:
+    - host: razor.app.local
+      service: brewstore-web
+
+    - host: server.blazor.app.local
+      service: brewstore-blazorserver
+
+    - host: wasm.blazor.app.local
+      service: brewstore-blazorwasm
+    
+
+    - path: /api
+      service: brewstore-api
+    - host: api.app.local
+      service: brewstore-api
+
+
+
 services:
 - name: brewstore-api
   project: BrewStore.Api/BrewStore.Api.csproj
