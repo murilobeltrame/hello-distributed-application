@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.5" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.7" />
+    <PackageReference Include="HotChocolate.AspNetCore" Version="11.3.5" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,5 +16,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <None Remove="Queries\" />
+    <None Remove="HotChocolate.AspNetCore" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Queries\" />
   </ItemGroup>
 </Project>
