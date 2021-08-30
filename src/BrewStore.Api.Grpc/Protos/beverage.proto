@@ -1,0 +1,34 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "BrewStore.Api.Grpc.Protos";
+
+package beverage;
+
+service BeverageService {
+    rpc List (Empty) returns (Beverages);
+    rpc GetById (BeverageFilter) returns (Beverage);
+}
+
+
+message Beverage {
+    string Id = 1;
+    string Name = 2;
+    Brand Brand = 3;
+    Kind Kind = 4;
+}
+message Brand {
+    string Id = 1;
+    string Name = 2;
+}
+message Kind {
+    string Id = 1;
+    string Name = 2;
+}
+message Beverages {
+    repeated Beverage items = 1;
+}
+
+message BeverageFilter {
+    string Id = 1;
+}
+message Empty {}
